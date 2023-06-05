@@ -94,17 +94,30 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
 
     // return next(new ErrorHander("error hai bro, achche se banao", 505))
-    const resultPerPage = 9;
-    const productCount = await Product.countDocuments();
-    const apiFeature = new ApiFeatures(Product.find(), req.query)
+    const resultPerPage = 4;
+
+    const productsCount = await Product.countDocuments();
+    let apiFeature = new ApiFeatures(Product.find(), req.query)
         .search()
         .filter()
-        .pagination(resultPerPage);
-    const products = await apiFeature.query;
+
+    let products = await apiFeature.query;
+    let filteredProductsCount = products.length;
+
+    //in one time, we can call only once thats reason creating another instance of this
+    apiFeature = new ApiFeatures(Product.find(), req.query)
+        .search()
+        .filter()
+        .pagination(resultPerPage)
+
+    products = await apiFeature.query;
+
     res.status(200).json({
         success: true,
         products,
-        productCount
+        productsCount,
+        resultPerPage,
+        filteredProductsCount,
     })
 })
 
