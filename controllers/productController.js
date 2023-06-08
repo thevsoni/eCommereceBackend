@@ -94,6 +94,7 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
 
     // return next(new ErrorHander("error hai bro, achche se banao", 505))
+    console.log("first")
     const resultPerPage = 4;
 
     const productsCount = await Product.countDocuments();
