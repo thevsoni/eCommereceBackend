@@ -83,6 +83,7 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
     if (!product) {
         return next(new ErrorHander("Product not found", 404))
     }
+    // console.log(product.images[0])
     res.status(200).json({
         success: true,
         product
@@ -93,8 +94,6 @@ exports.getProductDetails = catchAsyncErrors(async (req, res, next) => {
 //get all product
 exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
 
-    // return next(new ErrorHander("error hai bro, achche se banao", 505))
-    console.log("first")
     const resultPerPage = 4;
 
     const productsCount = await Product.countDocuments();
@@ -103,6 +102,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
         .filter()
 
     let products = await apiFeature.query;
+
     let filteredProductsCount = products.length;
 
     //in one time, we can call only once thats reason creating another instance of this
@@ -112,6 +112,7 @@ exports.getAllProducts = catchAsyncErrors(async (req, res, next) => {
         .pagination(resultPerPage)
 
     products = await apiFeature.query;
+
 
     res.status(200).json({
         success: true,
