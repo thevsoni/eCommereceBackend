@@ -235,7 +235,7 @@ exports.updateUserRole = catchAsyncErrors(async (req, res, next) => {
         role: req.body.role,
     }
 
-    const user = await User.findByIdAndUpdate(req.params.id, newUserData, {
+    await User.findByIdAndUpdate(req.params.id, newUserData, {
         new: true,
         runValidators: true,
         useFindAndModify: false,
@@ -255,7 +255,11 @@ exports.deleteUser = catchAsyncErrors(async (req, res, next) => {
         return next(new ErrorHander(`User does not exist with id: ${req.params.id}`, 404))
     }
 
+    const imageId = user.avatar.public_id;
+    await cloudinary.v2.uploader.destroy(imageId);
+
     await user.deleteOne();
+
     res.status(200).json({
         success: true,
         message: "User Deleted Successfully",
